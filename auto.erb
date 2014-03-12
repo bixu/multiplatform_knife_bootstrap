@@ -1,0 +1,43 @@
+# Universal Bootstrap Script
+
+bash -c '
+
+# Linux Distros:
+if [ $(uname -s | grep Linux) ]; then
+true && curl -s -L https://www.opscode.com/chef/install.sh | bash
+fi
+
+# Illumos Distros:
+if [ $(uname -s | grep SunOS) ]; then
+  if [ $(chef-client --version 2>/dev/null | grep -c Chef) -ne "1" ]; then
+    true && curl -s -L https://raw.github.com/bixu/chef-bootstrap/sngl/install.sh | bash -s
+  fi
+fi
+
+mkdir -p /etc/chef
+
+(
+cat <<'EOP'
+<%= validation_key %>
+EOP
+) > /etc/chef/validation.pem
+
+(
+cat <<'EOP'
+<%= config_content %>
+EOP
+) > /etc/chef/client.rb
+
+(
+cat <<'EOP'
+<%= { "run_list" => @run_list }.to_json %>
+EOP
+) > /etc/chef/first-boot.json
+
+/opt/chef/embedded/bin/gem install --no-ri --no-rdoc ipaddr_extensions
+
+export PATH=$PATH:/opt/chef/bin
+
+<%= start_chef %>
+
+'
