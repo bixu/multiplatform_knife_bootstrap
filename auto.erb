@@ -1,17 +1,13 @@
-# Universal Bootstrap Script
-
 bash -c '
 
 # Linux Distros:
 if [ $(uname -s | grep Linux) ]; then
-true && curl -s -L https://www.opscode.com/chef/install.sh | bash
+curl -s -L https://www.opscode.com/chef/install.sh | bash
 fi
 
 # Illumos Distros:
 if [ $(uname -s | grep SunOS) ]; then
-  if [ $(chef-client --version 2>/dev/null | grep -c Chef) -ne "1" ]; then
-    true && curl -s -L https://raw.github.com/bixu/chef-bootstrap/sngl/install.sh | bash -s
-  fi
+curl -s -L https://raw.github.com/bixu/chef-bootstrap/master/install.sh | bash -s
 fi
 
 mkdir -p /etc/chef
@@ -34,6 +30,7 @@ cat <<'EOP'
 EOP
 ) > /etc/chef/first-boot.json
 
+/opt/chef/embedded/bin/gem update chef --no-ri --no-rdoc
 /opt/chef/embedded/bin/gem install --no-ri --no-rdoc ipaddr_extensions
 
 export PATH=$PATH:/opt/chef/bin
