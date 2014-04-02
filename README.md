@@ -1,4 +1,4 @@
-ubs
+Multiplatform Knife Bootstrap
 ===
 
-Universal bootstrap script for Chef.
+Multiplatform bootstrap script for use with Knife/Chef.  Pull requests welcome.
